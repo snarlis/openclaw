@@ -44,3 +44,11 @@ Troubleshooting:
   (`openclaw plugins disable whatsapp` +
   `openclaw config set channels.whatsapp.enabled false`), restart, then
   re-pair with `openclaw channels add`.
+- Two Gateway processes at once deadlock on the state DB: stuck at `startup
+  migration`, ~0 CPU, port free. Fix: `schtasks /End`, kill leftover
+  `node ... dist/index.js gateway` processes, single `schtasks /Run`.
+- `logbook` service fails to start without a screenshot-capable paired node —
+  leave it disabled on this laptop. `active-memory` is fine (enable + restart).
+- `plugins enable/disable` does live activation against the running Gateway;
+  if CLI commands hang, check for competing openclaw processes/DB locks first,
+  one change at a time.
