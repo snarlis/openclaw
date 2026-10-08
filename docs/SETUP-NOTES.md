@@ -27,8 +27,9 @@ OpenRouter specifics:
 
 Troubleshooting:
 
-- `npm.ps1 cannot be loaded` → use `cmd /c "npm ..."` or
+- `npm.ps1 cannot be loaded` → use `cmd /c "npm ..."` (`npm.cmd ...`) or
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- Same block for `openclaw.ps1` → use `openclaw.cmd ...` in PowerShell.
 - `winget` msstore prompt fails headless → always pass
   `--source winget --accept-source-agreements --disable-interactivity`.
 - UAC prompt on install → accept, then restart the terminal
