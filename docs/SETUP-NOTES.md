@@ -35,3 +35,12 @@ Troubleshooting:
 - UAC prompt on install → accept, then restart the terminal
   (PATH / npm prefix refresh: `C:\Users\<you>\AppData\Roaming\npm`).
 - Gateway port clash → `openclaw config set gateway.port 19001`.
+- Never `npm install -g openclaw` while the Gateway service runs on Windows
+  (file locks can half-replace `dist/`, then the Gateway crashes with
+  `ERR_MODULE_NOT_FOUND` for hashed chunks). Stop first:
+  `schtasks /End /TN "OpenClaw Gateway"`, reinstall, then
+  `openclaw.cmd gateway restart`.
+- If startup stalls right after `loading whatsapp ...`, disable it temporarily
+  (`openclaw plugins disable whatsapp` +
+  `openclaw config set channels.whatsapp.enabled false`), restart, then
+  re-pair with `openclaw channels add`.
