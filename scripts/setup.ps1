@@ -4,10 +4,10 @@
   Safe to re-run: never overwrites existing ~/.openclaw files without backup,
   never writes secrets.
 #>
-$ErrorActionPreference = "Stop"
 param(
   [switch]$Restore  # overwrite ~/.openclaw/openclaw.json from the repo template (backup first)
 )
+$ErrorActionPreference = "Stop"
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $OpenClawDir = Join-Path $HOME ".openclaw"
 $TargetConfig = Join-Path $OpenClawDir "openclaw.json"
