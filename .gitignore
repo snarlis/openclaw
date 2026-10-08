@@ -1,0 +1,24 @@
+# Local env / secrets — never commit
+.env
+.env.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OpenClaw runtime state (lives in ~/.openclaw, should never be copied here)
+.openclaw/
+*.log
+openclaw.log
+
+# Credentials that sometimes get dumped next to config by mistake
+secrets.json
+credentials/
+*-allowFrom.json
+oauth.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

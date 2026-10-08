@@ -1,0 +1,41 @@
+// snarlis/openclaw — canonical OpenClaw config template (JSON5 allowed).
+// Copied to ~/.openclaw/openclaw.json by scripts/setup.ps1.
+// NEVER put API keys in this file. Keys live in $env:OPENROUTER_API_KEY
+// or the local auth store (openclaw models auth login --provider openrouter).
+{
+  // Workspace for skills, prompts, memory. Seeded from ./workspace/ on first setup.
+  "agents": {
+    "defaults": {
+      "workspace": "~/.openclaw/workspace",
+      "model": {
+        "primary": "openrouter/auto",
+        "fallbacks": [
+          "openrouter/anthropic/claude-sonnet-4-6",
+          "openrouter/openai/gpt-5.4"
+        ]
+      }
+    },
+    "entries": {
+      "main": {
+        "identity": {
+          "name": "Clawd",
+          "theme": "helpful assistant",
+          "emoji": "🦞"
+        }
+      }
+    }
+  },
+  // Gateway defaults. Override with `openclaw config set gateway.port 19001` etc.
+  "gateway": {
+    "port": 18789
+  },
+  "logging": {
+    "level": "info",
+    "consoleLevel": "info",
+    "consoleStyle": "pretty"
+  },
+  // Sessions: per-sender keeps multi-user inboxes sane.
+  "session": {
+    "scope": "per-sender"
+  }
+}
