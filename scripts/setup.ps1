@@ -5,6 +5,9 @@
   never writes secrets.
 #>
 $ErrorActionPreference = "Stop"
+param(
+  [switch]$Restore  # overwrite ~/.openclaw/openclaw.json from the repo template (backup first)
+)
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $OpenClawDir = Join-Path $HOME ".openclaw"
 $TargetConfig = Join-Path $OpenClawDir "openclaw.json"
@@ -44,15 +47,31 @@ if (-not $openclawCmd) {
 }
 & $openclawCmd --version
 
+# 2b. Install non-stock plugins from plugins.txt (idempotent: warns, does not throw).
+$plugFile = Join-Path $RepoRoot "plugins.txt"
+if (Test-Path $plugFile) {
+  Get-Content $plugFile | Where-Object { $_ -match '\S' -and $_ -notmatch '^\s*#' } | ForEach-Object {
+    $spec = $_.Trim()
+    Write-Host "==> installing plugin $spec ..."
+    & $openclawCmd plugins install $spec --accept-capabilities --acknowledge-install-policy-warning
+    if ($LASTEXITCODE -ne 0) { Write-Host "plugin install exited $LASTEXITCODE for $spec (may already be installed)" }
+  }
+} else {
+  Write-Host "no plugins.txt -- skipping plugin installs"
+}
+
 # 3. Seed ~/.openclaw
 New-Item -ItemType Directory -Force -Path $OpenClawDir | Out-Null
-if (Test-Path $TargetConfig) {
-  $bak = "$TargetConfig.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
-  Copy-Item $TargetConfig $bak
-  Write-Host "backed up existing config -> $bak"
-} else {
+if (($Restore -or -not (Test-Path $TargetConfig))) {
+  if (Test-Path $TargetConfig) {
+    $bak = "$TargetConfig.bak-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+    Copy-Item $TargetConfig $bak
+    Write-Host "backed up existing config -> $bak"
+  }
   Copy-Item $TemplateConfig $TargetConfig
-  Write-Host "wrote $TargetConfig"
+  Write-Host "wrote $TargetConfig from repo template"
+} else {
+  Write-Host "$TargetConfig exists -- leaving in place (re-run with -Restore to overwrite from template)"
 }
 
 if (-not (Test-Path $TargetWorkspace)) {

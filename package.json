@@ -7,6 +7,7 @@
   "scripts": {
     "prereqs": "powershell -ExecutionPolicy Bypass -File scripts/install-prereqs.ps1",
     "setup": "powershell -ExecutionPolicy Bypass -File scripts/setup.ps1",
+    "export": "powershell -ExecutionPolicy Bypass -File scripts/export.ps1",
     "doctor": "openclaw doctor --fix",
     "validate": "openclaw config validate",
     "health": "openclaw health",

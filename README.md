@@ -100,6 +100,41 @@ gh --version
     └── SETUP-NOTES.md
 ```
 
+## Backup & restore (never reconfigure again)
+
+This repo holds your **sanitized** config: no gateway token, no auth secrets,
+no phone numbers, no `credentials/`, no `.env`. Those stay on each machine only.
+
+**Backup (on the configured machine):**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/export.ps1
+git diff   # REVIEW: must show no tokens, keys, or numbers
+git add -A; git commit -m "Sync openclaw config"; git push
+```
+
+If you installed a new non-stock plugin, add its npm spec to `plugins.txt`
+(find it with `openclaw.cmd plugins inspect <id>` → `Install: Spec:`).
+
+**Restore (on a new machine):**
+
+```powershell
+git clone https://github.com/snarlis/openclaw.git
+cd openclaw
+powershell -ExecutionPolicy Bypass -File scripts/install-prereqs.ps1
+# restart terminal, then:
+powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
+```
+
+Then the 3 things that **cannot** live in git (do once per machine):
+
+```powershell
+openclaw.cmd onboard --auth-choice openrouter-oauth   # or ...-api-key
+openclaw.cmd channels add                             # re-pair WhatsApp (restores allowlist)
+openclaw.cmd gateway install                          # persistent service (schtasks)
+openclaw.cmd health
+```
+
 ## Updating
 
 ```powershell

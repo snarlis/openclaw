@@ -1,0 +1,5 @@
+# Non-stock plugins, one npm spec per line. Installed by scripts/setup.ps1.
+# Lines starting with # and blank lines are ignored.
+# Reinstalled with: openclaw plugins install <spec>
+@openclaw/whatsapp
+@openclaw/duckduckgo-plugin
