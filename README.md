@@ -135,6 +135,45 @@ openclaw.cmd gateway install                          # persistent service (scht
 openclaw.cmd health
 ```
 
+## Autostart (Windows)
+
+Short answer: the Gateway starts **when you log on**, not at boot. No login
+→ no Telegram replies.
+
+How it works on this laptop:
+
+- `openclaw.cmd gateway install` registered a Scheduled Task named
+  **OpenClaw Gateway** (runs as your user, trigger: **at logon**).
+- Log on → it starts in the background (allow 1–3 min warmup; plugin load
+  alone takes ~40s). Log off → it stops. Locked screen is fine, it keeps
+  running.
+- Dashboard (after start): http://127.0.0.1:18789/ — token via
+  `openclaw.cmd gateway auth-token`.
+
+Check / control it:
+
+```powershell
+openclaw.cmd gateway status     # registered? running? version?
+openclaw.cmd health             # "still starting" right after logon is normal
+openclaw.cmd gateway restart    # bounce it
+schtasks /Query /TN "OpenClaw Gateway" /V /FO LIST   # raw task details
+```
+
+Or GUI: Win+R → `taskschd.msc` → Task Scheduler Library → OpenClaw Gateway.
+
+Disable / re-enable autostart:
+
+```powershell
+schtasks /Change /TN "OpenClaw Gateway" /Disable
+schtasks /Change /TN "OpenClaw Gateway" /Enable
+```
+
+Manual foreground run (blocks the terminal, good for debugging):
+
+```powershell
+openclaw.cmd gateway run --port 18789 --verbose
+```
+
 ## Updating
 
 ```powershell
